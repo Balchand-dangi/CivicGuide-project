@@ -1,0 +1,153 @@
+<div class="dashboard-shell">
+  <div class="container py-4 py-lg-5">
+
+    <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
+      <div>
+        <span class="text-primary fw-semibold">Mentor Workspace</span>
+        <p class="text-secondary mb-0">Guide citizens through government-service processes.</p>
+      </div>
+      <div class="dashboard-pill"><i class="bi bi-person-badge me-2"></i>Mentor account</div>
+    </div>
+
+    @if (pendingApproval) {
+    <div class="alert alert-warning d-flex align-items-center gap-2" role="alert">
+      <i class="bi bi-hourglass-split fs-5"></i>
+      <span>Your mentor account is <strong>pending administrator approval</strong>. You will be able to accept citizen
+        requests once approved.</span>
+    </div>
+    }
+
+    <!-- Stats -->
+    <div class="row g-3 mb-4">
+      <div class="col-md-4">
+        <div class="stat-card">
+          <div class="stat-icon"><i class="bi bi-inbox"></i></div>
+          <div><small>Available Requests</small>
+            <h3>{{ available.length }}</h3>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="stat-card">
+          <div class="stat-icon"><i class="bi bi-person-check"></i></div>
+          <div><small>Active Guidance</small>
+            <h3>{{ activeCount }}</h3>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="stat-card">
+          <div class="stat-icon"><i class="bi bi-check2-circle"></i></div>
+          <div><small>Completed</small>
+            <h3>{{ completedCount }}</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Available requests -->
+    <section class="card dashboard-card border-0 shadow-sm mb-4">
+      <div class="card-body p-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <div>
+            <h4 class="fw-bold mb-1">Requests Waiting for a Mentor</h4>
+            <p class="text-secondary mb-0">Review the citizen's need before accepting.</p>
+          </div>
+          <button class="btn btn-outline-primary btn-sm" (click)="load()">
+            <i class="bi bi-arrow-clockwise"></i>
+          </button>
+        </div>
+
+        @if (loading) {
+        <div class="text-center py-4">
+          <div class="spinner-border text-primary"></div>
+        </div>
+        } @else if (available.length === 0) {
+        <div class="empty-state">
+          <h5>No pending requests</h5>
+          <p>New citizen requests will appear here.</p>
+        </div>
+        } @else {
+        <div class="row g-3">
+          @for (r of available; track r.id) {
+          <div class="col-lg-6">
+            <div class="request-card">
+              <div class="d-flex justify-content-between gap-2">
+                <span class="badge text-bg-light">{{ r.category }}</span>
+                <small class="text-secondary">{{ r.createdAt | date:'dd MMM, HH:mm' }}</small>
+              </div>
+              <h5 class="fw-bold mt-3 mb-1">{{ r.serviceName }}</h5>
+              <p class="text-secondary mb-2">{{ r.description }}</p>
+              <div class="small mb-3">
+                <i class="bi bi-person me-1"></i>{{ r.userName }} · {{ r.userEmail }}
+              </div>
+              <button class="btn btn-primary btn-sm" (click)="accept(r.id)">
+                <i class="bi bi-hand-thumbs-up me-2"></i>Accept Request
+              </button>
+            </div>
+          </div>
+          }
+        </div>
+        }
+      </div>
+    </section>
+
+    <!-- My assigned requests -->
+    <section class="card dashboard-card border-0 shadow-sm">
+      <div class="card-body p-4">
+        <h4 class="fw-bold mb-1">My Guidance Requests</h4>
+        <p class="text-secondary mb-3">Manage requests you have accepted.</p>
+
+        @if (mine.length === 0) {
+        <div class="empty-state">
+          <i class="bi bi-people"></i>
+          <h5>No assigned requests</h5>
+        </div>
+        } @else {
+        <div class="table-responsive">
+          <table class="table align-middle">
+            <thead>
+              <tr>
+                <th>Citizen</th>
+                <th>Service</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (r of mine; track r.id) {
+              <tr>
+                <td>
+                  <strong>{{ r.userName }}</strong>
+                  <div class="small text-secondary">{{ r.userEmail }}</div>
+                </td>
+                <td>{{ r.serviceName }}</td>
+                <td>
+                  <span class="badge" [ngClass]="badgeClass(r.status)">
+                    {{ r.status.replace('_',' ') }}
+                  </span>
+                </td>
+                <td>
+                  @if (r.status === 'ACCEPTED') {
+                  <button class="btn btn-sm btn-outline-primary" (click)="updateStatus(r.id, 'IN_PROGRESS')">
+                    Start guidance
+                  </button>
+                  } @else if (r.status === 'IN_PROGRESS') {
+                  <button class="btn btn-sm btn-outline-success" (click)="updateStatus(r.id, 'COMPLETED')">
+                    Mark complete
+                  </button>
+                  } @else {
+                  <span class="text-secondary">—</span>
+                  }
+                </td>
+              </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+        }
+      </div>
+    </section>
+
+  </div>
+</div>

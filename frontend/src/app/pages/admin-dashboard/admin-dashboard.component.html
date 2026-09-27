@@ -1,0 +1,275 @@
+<div class="dashboard-shell">
+  <div class="container py-4 py-lg-5">
+
+    <!-- Header -->
+    <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
+      <div>
+        <span class="text-primary fw-semibold">Administration</span>
+
+        <h1 class="fw-bold mb-1">
+          CivicGuide Control Center
+        </h1>
+
+        <p class="text-secondary mb-0">
+          Monitor users, mentors and citizen-service activity.
+        </p>
+      </div>
+
+      <div class="dashboard-pill">
+        <i class="bi bi-shield-lock me-2"></i>
+        Administrator
+      </div>
+    </div>
+
+
+    <!-- Statistics -->
+    <div class="row g-3 mb-4">
+
+      <!-- Users -->
+      <div class="col-sm-6 col-xl-3">
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="bi bi-people"></i>
+          </div>
+
+          <div>
+            <small>Citizens</small>
+            <h3>{{ stats.users }}</h3>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mentors -->
+      <div class="col-sm-6 col-xl-3">
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="bi bi-person-badge"></i>
+          </div>
+
+          <div>
+            <small>Mentors</small>
+            <h3>{{ stats.mentors }}</h3>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pending mentors -->
+      <div class="col-sm-6 col-xl-3">
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="bi bi-person-check"></i>
+          </div>
+
+          <div>
+            <small>Pending Mentors</small>
+            <h3>{{ stats.pendingMentors }}</h3>
+          </div>
+        </div>
+      </div>
+
+      <!-- Requests -->
+      <div class="col-sm-6 col-xl-3">
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="bi bi-files"></i>
+          </div>
+
+          <div>
+            <small>Total Requests</small>
+            <h3>{{ stats.requests }}</h3>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Main content -->
+    <div class="row g-4">
+
+      <!-- Mentor verification -->
+      <div class="col-lg-8">
+
+        <section class="card dashboard-card border-0 shadow-sm">
+
+          <div class="card-body p-4">
+
+            <div class="d-flex justify-content-between align-items-center mb-3">
+
+              <div>
+                <h4 class="fw-bold mb-1">
+                  Mentor Verification
+                </h4>
+
+                <p class="text-secondary mb-0">
+                  Review mentor profiles before they can accept citizen requests.
+                </p>
+              </div>
+
+              <button type="button" class="btn btn-outline-primary btn-sm" (click)="load()">
+
+                <i class="bi bi-arrow-clockwise"></i>
+
+              </button>
+
+            </div>
+
+            <!-- Loading -->
+            @if (loading) {
+
+            <div class="text-center py-5">
+
+              <div class="spinner-border text-primary"></div>
+
+            </div>
+
+            }
+
+            <!-- Empty -->
+            @else if (pendingMentors.length === 0) {
+
+            <div class="empty-state text-center py-5">
+
+              <i class="bi bi-patch-check fs-1"></i>
+
+              <h5 class="mt-3">
+                All caught up
+              </h5>
+
+              <p class="text-secondary">
+                No mentor profiles are waiting for review.
+              </p>
+
+            </div>
+
+            }
+
+            <!-- Pending mentors -->
+            @else {
+
+            <div class="row g-3">
+
+              @for (mentor of pendingMentors; track mentor.id) {
+
+              <div class="col-md-6">
+
+                <div class="mentor-card">
+
+                  <!-- Mentor information -->
+                  <div class="d-flex align-items-center gap-3">
+
+                    <div class="avatar">
+                      <i class="bi bi-person"></i>
+                    </div>
+
+                    <div>
+
+                      <h5 class="mb-0 fw-bold">
+                        {{ mentor.name }}
+                      </h5>
+
+                      <small class="text-secondary">
+                        {{ mentor.email }}
+                      </small>
+
+                    </div>
+
+                  </div>
+
+                  <hr>
+
+                  <div class="small">
+
+                    <strong>
+                      {{ mentor.specialization }}
+                    </strong>
+
+                    <br>
+
+                    {{ mentor.qualification }}
+                    ·
+                    {{ mentor.experienceYears }} years
+
+                    <br>
+
+                    {{ mentor.languages }}
+
+                  </div>
+
+                  @if (mentor.bio) {
+
+                  <p class="small text-secondary mt-2 mb-3">
+                    {{ mentor.bio }}
+                  </p>
+
+                  }
+
+                  <!-- Actions -->
+                  <div class="d-flex gap-2">
+
+                    <button type="button" class="btn btn-success btn-sm" (click)="verify(mentor, 'APPROVED')">
+
+                      <i class="bi bi-check-lg me-1"></i>
+                      Approve
+
+                    </button>
+
+                    <button type="button" class="btn btn-outline-danger btn-sm" (click)="verify(mentor, 'REJECTED')">
+
+                      Reject
+
+                    </button>
+
+                  </div>
+
+                </div>
+
+              </div>
+
+              }
+
+            </div>
+
+            }
+
+          </div>
+
+        </section>
+
+      </div>
+
+      <!-- Platform health -->
+      <div class="col-lg-4">
+
+        <section class="card dashboard-card border-0 shadow-sm mb-4">
+
+          <div class="card-body p-4">
+
+            <h5 class="fw-bold">
+              Platform Health
+            </h5>
+
+            <div class="health-row">
+              <span>Pending requests</span>
+              <strong>{{ stats.pendingRequests }}</strong>
+            </div>
+
+            <div class="health-row">
+              <span>Mentor approval queue</span>
+              <strong>{{ stats.pendingMentors }}</strong>
+            </div>
+
+            <div class="health-row">
+              <span>Total mentors</span>
+              <strong>{{ stats.mentors }}</strong>
+            </div>
+
+          </div>
+
+        </section>
+
+      </div>
+
+    </div>
+
+  </div>
+</div>

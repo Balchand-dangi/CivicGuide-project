@@ -1,0 +1,314 @@
+<div class="auth-page">
+
+    <div class="container">
+
+        <div class="row justify-content-center">
+
+            <div class="col-md-8 col-lg-7">
+
+                <div class="card border-0 shadow-sm auth-card">
+
+                    <div class="card-body p-4 p-md-5">
+
+                        <!-- Header -->
+
+                        <div class="text-center mb-4">
+
+                            <div class="auth-icon">
+                                <i class="bi bi-person-plus"></i>
+                            </div>
+
+                            <h2 class="fw-bold mt-3">
+                                Create Account
+                            </h2>
+
+                            <p class="text-secondary">
+                                Join CivicGuide today
+                            </p>
+
+                        </div>
+
+
+                        <!-- FORM -->
+
+                        <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+
+
+                            <!-- Full Name -->
+
+                            <div class="mb-3">
+
+                                <label class="form-label fw-semibold">
+                                    Full Name
+                                </label>
+
+                                <input type="text" class="form-control form-control-lg" formControlName="fullName"
+                                    placeholder="Enter your full name" />
+
+                                @if (
+                                f['fullName'].touched &&
+                                f['fullName'].invalid
+                                ) {
+
+                                <small class="text-danger">
+                                    Full name is required.
+                                </small>
+
+                                }
+
+                            </div>
+
+
+                            <!-- Email -->
+
+                            <div class="mb-3">
+
+                                <label class="form-label fw-semibold">
+                                    Email Address
+                                </label>
+
+                                <input type="email" class="form-control form-control-lg" formControlName="email"
+                                    placeholder="Enter your email" />
+
+                                @if (
+                                f['email'].touched &&
+                                f['email'].invalid
+                                ) {
+
+                                <small class="text-danger">
+                                    Please enter a valid email address.
+                                </small>
+
+                                }
+
+                            </div>
+
+
+                            <!-- Phone -->
+
+                            <div class="mb-3">
+
+                                <label class="form-label fw-semibold">
+                                    Phone Number
+                                </label>
+
+                                <input type="tel" class="form-control form-control-lg" formControlName="phone"
+                                    placeholder="Enter 10-digit phone number" />
+
+                                @if (
+                                f['phone'].touched &&
+                                f['phone'].invalid
+                                ) {
+
+                                <small class="text-danger">
+                                    Please enter a valid 10-digit phone number.
+                                </small>
+
+                                }
+
+                            </div>
+
+
+                            <!-- ROLE -->
+
+                            <div class="mb-4">
+
+                                <label class="form-label fw-semibold">
+                                    Register As
+                                </label>
+
+                                <select class="form-select form-select-lg" formControlName="role">
+
+                                    <option value="USER">
+                                        Citizen
+                                    </option>
+
+                                    <option value="MENTOR">
+                                        Mentor
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+
+                            <!-- MENTOR DETAILS -->
+
+                            @if (isMentor) {
+
+                            <div class="mentor-section mb-4">
+
+                                <h5 class="fw-bold mb-3">
+
+                                    <i class="bi bi-person-badge me-2"></i>
+
+                                    Mentor Information
+
+                                </h5>
+
+
+                                <!-- Qualification -->
+
+                                <div class="mb-3">
+
+                                    <label class="form-label">
+                                        Qualification
+                                    </label>
+
+                                    <input type="text" class="form-control" formControlName="qualification"
+                                        placeholder="e.g. B.Tech, MBA, LLB" />
+
+                                    @if (
+                                    f['qualification'].touched &&
+                                    f['qualification'].invalid
+                                    ) {
+
+                                    <small class="text-danger">
+                                        Qualification is required.
+                                    </small>
+
+                                    }
+
+                                </div>
+
+
+                                <!-- Specialization -->
+
+                                <div class="mb-3">
+
+                                    <label class="form-label">
+                                        Specialization
+                                    </label>
+
+                                    <input type="text" class="form-control" formControlName="specialization"
+                                        placeholder="e.g. Government Schemes" />
+
+                                </div>
+
+
+                                <!-- Experience -->
+
+                                <div class="mb-3">
+
+                                    <label class="form-label">
+                                        Experience (Years)
+                                    </label>
+
+                                    <input type="number" class="form-control" formControlName="experienceYears" min="0"
+                                        placeholder="e.g. 3" />
+
+                                </div>
+
+
+                                <!-- Languages -->
+
+                                <div class="mb-3">
+
+                                    <label class="form-label">
+                                        Languages
+                                    </label>
+
+                                    <input type="text" class="form-control" formControlName="languages"
+                                        placeholder="e.g. Hindi, English" />
+
+                                </div>
+
+
+                                <!-- Bio -->
+
+                                <div class="mb-3">
+
+                                    <label class="form-label">
+                                        About You
+                                    </label>
+
+                                    <textarea class="form-control" rows="4" formControlName="bio"
+                                        placeholder="Tell citizens about your experience..."></textarea>
+
+                                </div>
+
+                            </div>
+
+                            }
+
+
+                            <!-- PASSWORD -->
+
+                            <div class="mb-3">
+
+                                <label class="form-label fw-semibold">
+                                    Password
+                                </label>
+
+                                <input type="password" class="form-control form-control-lg" formControlName="password"
+                                    placeholder="Minimum 8 characters" />
+
+                                @if (
+                                f['password'].touched &&
+                                f['password'].invalid
+                                ) {
+
+                                <small class="text-danger">
+                                    Password must contain at least 8 characters.
+                                </small>
+
+                                }
+
+                            </div>
+
+
+                            <!-- CONFIRM PASSWORD -->
+
+                            <div class="mb-4">
+
+                                <label class="form-label fw-semibold">
+                                    Confirm Password
+                                </label>
+
+                                <input type="password" class="form-control form-control-lg"
+                                    formControlName="confirmPassword" placeholder="Confirm your password" />
+
+                            </div>
+
+
+                            <!-- SUBMIT -->
+
+                            <button type="submit" class="btn btn-primary btn-lg w-100">
+
+                                Create Account
+
+                                <i class="bi bi-arrow-right ms-2"></i>
+
+                            </button>
+
+
+                        </form>
+
+
+                        <!-- LOGIN -->
+
+                        <div class="text-center mt-4">
+
+                            <span class="text-secondary">
+                                Already have an account?
+                            </span>
+
+                            <a routerLink="/login" class="text-primary fw-semibold text-decoration-none ms-1">
+
+                                Login
+
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

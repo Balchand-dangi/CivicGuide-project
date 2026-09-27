@@ -1,0 +1,178 @@
+<div class="dashboard-shell">
+  <div class="container py-4 py-lg-5">
+    <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
+      <div>
+        <span class="text-primary fw-semibold ">Citizen Dashboard</span>
+        <p class="text-secondary mb-0">Get guidance for government services and track your requests.</p>
+      </div>
+      <div class="dashboard-pill"><i class="bi bi-shield-check me-2"></i>Secure citizen account</div>
+    </div>
+
+    <!-- Stats -->
+    <div class="row g-3 mb-4">
+      <div class="col-md-4">
+        <div class="stat-card">
+          <div class="stat-icon"><i class="bi bi-files"></i></div>
+          <div><small>Total Requests</small>
+            <h3>{{ requests.length }}</h3>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="stat-card">
+          <div class="stat-icon"><i class="bi bi-hourglass-split"></i></div>
+          <div><small>Pending</small>
+            <h3>{{ pendingCount }}</h3>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="stat-card">
+          <div class="stat-icon"><i class="bi bi-person-check"></i></div>
+          <div><small>Guidance Assigned</small>
+            <h3>{{ assignedCount }}</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Service tiles -->
+    <section class="card dashboard-card border-0 shadow-sm mb-4">
+      <div class="card-body p-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <div>
+            <h4 class="fw-bold mb-1">Government Services</h4>
+            <p class="text-secondary mb-0">Click a service to auto-fill the request form below.</p>
+          </div>
+        </div>
+        <div class="row g-3">
+          @for (service of services; track service.name) {
+          <div class="col-md-6 col-lg-4">
+            <button class="service-tile w-100 text-start" (click)="selectService(service)">
+              <i class="bi {{ service.icon }}"></i>
+              <span>
+                <strong>{{ service.name }}</strong>
+                <small>{{ service.category }}</small>
+              </span>
+              <i class="bi bi-arrow-right ms-auto"></i>
+            </button>
+          </div>
+          }
+        </div>
+      </div>
+    </section>
+
+    <!-- Create request form -->
+    <section id="new-request" class="card dashboard-card border-0 shadow-sm mb-4">
+      <div class="card-body p-4">
+        <h4 class="fw-bold">Create a Service Request</h4>
+        <p class="text-secondary">Tell us what you need help with. A mentor can accept and guide you.</p>
+
+        <form [formGroup]="requestForm" (ngSubmit)="createRequest()">
+          <div class="row g-3">
+            <div class="col-md-5">
+              <label class="form-label fw-semibold">Category</label>
+              <select class="form-select" formControlName="category">
+                <option>Identity &amp; Documents</option>
+                <option>Travel</option>
+                <option>Transport</option>
+                <option>Certificates</option>
+                <option>Welfare</option>
+              </select>
+            </div>
+            <div class="col-md-7">
+              <label class="form-label fw-semibold">Service</label>
+              <input class="form-control" formControlName="serviceName">
+            </div>
+            <div class="col-12">
+              <label class="form-label fw-semibold">What do you need help with?</label>
+              <textarea class="form-control" rows="4" formControlName="description"
+                placeholder="Example: I want to apply for a passport for the first time."></textarea>
+              @if (requestForm.get('description')?.touched && requestForm.get('description')?.hasError('required')) {
+              <small class="text-danger">Please describe what you need help with.</small>
+              }
+            </div>
+          </div>
+          <button class="btn btn-primary mt-3" type="submit" [disabled]="isSubmitting">
+            @if (isSubmitting) {
+            <span class="spinner-border spinner-border-sm me-2"></span>Submitting…
+            } @else {
+            <i class="bi bi-send me-2"></i>Submit Request
+            }
+          </button>
+        </form>
+      </div>
+    </section>
+
+    <!-- My requests table -->
+    <section class="card dashboard-card border-0 shadow-sm">
+      <div class="card-body p-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <div>
+            <h4 class="fw-bold mb-1">My Requests</h4>
+            <p class="text-secondary mb-0">Track the progress of your guidance requests.</p>
+          </div>
+          <button class="btn btn-outline-primary btn-sm" (click)="loadRequests()">
+            <i class="bi bi-arrow-clockwise"></i>
+          </button>
+        </div>
+
+        @if (loading) {
+        <div class="text-center py-4">
+          <div class="spinner-border text-primary"></div>
+        </div>
+        } @else if (requests.length === 0) {
+        <div class="empty-state">
+          <i class="bi bi-inbox"></i>
+          <h5>No requests yet</h5>
+          <p>Create your first request above.</p>
+        </div>
+        } @else {
+        <div class="table-responsive">
+          <table class="table align-middle">
+            <thead>
+              <tr>
+                <th>Service</th>
+                <th>Mentor</th>
+                <th>Status</th>
+                <th>Date</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (request of requests; track request.id) {
+              <tr>
+                <td>
+                  <strong>{{ request.serviceName }}</strong>
+                  <div class="small text-secondary">{{ request.category }}</div>
+                </td>
+                <td>{{ request.mentorName || '—' }}</td>
+                <td>
+                  <span class="badge" [ngClass]="badgeClass(request.status)">
+                    {{ request.status.replace('_',' ') }}
+                  </span>
+                </td>
+                <td>{{ request.createdAt | date:'dd MMM yyyy' }}</td>
+                <td>
+                  @if (request.status === 'ACCEPTED' || request.status === 'IN_PROGRESS') {
+                  <button class="btn btn-sm btn-outline-success" (click)="updateStatus(request.id, 'COMPLETED')">
+                    Mark completed
+                  </button>
+                  }
+                  @if (request.status === 'PENDING') {
+                  <button class="btn btn-sm btn-outline-secondary" (click)="updateStatus(request.id, 'CANCELLED')">
+                    Cancel
+                  </button>
+                  }
+                </td>
+              </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+        }
+      </div>
+    </section>
+
+  </div>
+</div>

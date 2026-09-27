@@ -1,0 +1,61 @@
+<div class="auth-page">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-7 col-lg-5">
+
+                <div class="card border-0 shadow-sm auth-card">
+                    <div class="card-body p-4 p-md-5">
+
+                        <div class="text-center mb-4">
+                            <div class="auth-icon">
+                                <i class="bi bi-shield-lock-fill"></i>
+                            </div>
+                            <h2 class="fw-bold mt-3">Welcome Back</h2>
+                            <p class="text-secondary">Sign in to your CivicGuide account</p>
+                        </div>
+
+                        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">Email Address</label>
+                                <input type="email" id="email" class="form-control form-control-lg"
+                                    formControlName="email" placeholder="Enter your email" autocomplete="email">
+                                @if (loginForm.get('email')?.touched && loginForm.get('email')?.invalid) {
+                                <small class="text-danger">Please enter a valid email address.</small>
+                                }
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="form-label fw-semibold">Password</label>
+                                <input type="password" id="password" class="form-control form-control-lg"
+                                    formControlName="password" placeholder="Enter your password"
+                                    autocomplete="current-password">
+                                @if (loginForm.get('password')?.touched && loginForm.get('password')?.invalid) {
+                                <small class="text-danger">Password is required.</small>
+                                }
+                            </div>
+
+                            <button type="submit" id="login-btn" class="btn btn-primary btn-lg w-100"
+                                [disabled]="isLoading">
+                                @if (isLoading) {
+                                <span class="spinner-border spinner-border-sm me-2"></span>Signing in…
+                                } @else {
+                                <i class="bi bi-box-arrow-in-right me-2"></i>Login
+                                }
+                            </button>
+
+                        </form>
+
+                        <div class="text-center mt-4">
+                            <span class="text-secondary">Don't have an account?</span>
+                            <a routerLink="/register"
+                                class="text-primary fw-semibold text-decoration-none ms-1">Register</a>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

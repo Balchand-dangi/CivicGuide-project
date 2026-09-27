@@ -1,0 +1,5 @@
+.dashboard-shell{background:#f7f9fc;min-height:calc(100vh - 140px)}
+.dashboard-pill{background:#e9f2ff;color:#0d6efd;border-radius:999px;padding:.55rem .9rem;font-size:.9rem}
+.stat-card{background:#fff;border-radius:16px;padding:1.2rem;display:flex;gap:1rem;align-items:center;box-shadow:0 4px 18px rgba(0,0,0,.05)}
+.stat-card small{color:#6c757d}.stat-card h3{margin:0;font-weight:700}.stat-icon{width:46px;height:46px;border-radius:12px;background:#eaf2ff;color:#0d6efd;display:flex;align-items:center;justify-content:center;font-size:1.25rem}
+.dashboard-card{border-radius:18px}.service-tile{border:1px solid #e6eaf0;background:#fff;border-radius:14px;padding:1rem;display:flex;align-items:center;gap:.85rem;transition:.2s}.service-tile:hover{border-color:#0d6efd;transform:translateY(-2px);box-shadow:0 8px 20px rgba(13,110,253,.08)}.service-tile>i:first-child{font-size:1.5rem;color:#0d6efd}.service-tile span{display:flex;flex-direction:column}.service-tile small{color:#6c757d}.empty-state{text-align:center;padding:2.5rem;color:#6c757d}.empty-state i{font-size:2.5rem}
